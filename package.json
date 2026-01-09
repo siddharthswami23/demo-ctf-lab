@@ -1,0 +1,15 @@
+{
+  "name": "reflected-xss-lab",
+  "version": "1.0.0",
+  "description": "Intentionally vulnerable lab: Reflected XSS with no encoding",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["xss", "security", "ctf", "lab"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
